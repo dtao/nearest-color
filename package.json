@@ -1,0 +1,18 @@
+{
+  "name": "nearest-color",
+  "version": "0.1.0",
+  "description": "Find the nearest color",
+  "main": "nearestColor.js",
+  "scripts": {
+    "test": "autodoc -t nearestColor.js"
+  },
+  "keywords": [
+    "color",
+    "colors"
+  ],
+  "author": "Dan Tao <daniel.tao@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "color": "~ 0.5.0"
+  }
+}
