@@ -1,13 +1,5 @@
 (function(context) {
 
-  // Expect Color to be defined if we're in the browser.
-  var Color = context.Color;
-
-  // If we're in Node, load it here.
-  if (typeof Color === 'undefined' && typeof require === 'function') {
-    Color = require('color');
-  }
-
   /**
    * Defines an available color.
    *
@@ -57,7 +49,7 @@
    * nearestColor('#abc'); // => '#808'
    */
   function nearestColor(hex, colors) {
-    var needle = Color(hex).rgb(),
+    var needle = parseColor(hex),
         distance,
         minDistance = Infinity,
         rgb,
@@ -148,7 +140,7 @@
 
         return {
           source: color,
-          rgb: Color(color).rgb()
+          rgb: parseColor(color)
         };
       });
     }
@@ -158,7 +150,7 @@
       result.push({
         name: name,
         source: colors[name],
-        rgb: Color(colors[name]).rgb()
+        rgb: parseColor(colors[name])
       });
     }
     return result;
