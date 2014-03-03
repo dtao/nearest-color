@@ -166,9 +166,10 @@
    * @example
    * parseColor('#f00');    // => { r: 255, g: 0, b: 0 }
    * parseColor('#04fbc8'); // => { r: 4, g: 251, b: 200 }
+   * parseColor('#FF0');    // => { r: 255, g: 255, b: 0 }
    */
   function parseColor(source) {
-    var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/);
+    var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/i);
     if (!hexMatch) {
       return null;
     }
