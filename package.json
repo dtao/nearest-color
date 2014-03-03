@@ -12,6 +12,7 @@
   ],
   "author": "Dan Tao <daniel.tao@gmail.com>",
   "license": "MIT",
+  "repository": "https://github.com/dtao/nearest-color",
   "dependencies": {
     "color": "~ 0.5.0"
   }
