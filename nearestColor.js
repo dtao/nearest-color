@@ -164,10 +164,11 @@
    * @return {RGB}
    *
    * @example
-   * parseColor('#f00');            // => { r: 255, g: 0, b: 0 }
-   * parseColor('#04fbc8');         // => { r: 4, g: 251, b: 200 }
-   * parseColor('#FF0');            // => { r: 255, g: 255, b: 0 }
-   * parseColor('rgb(3, 10, 100)'); // => { r: 3, g: 10, b: 100 }
+   * parseColor('#f00');              // => { r: 255, g: 0, b: 0 }
+   * parseColor('#04fbc8');           // => { r: 4, g: 251, b: 200 }
+   * parseColor('#FF0');              // => { r: 255, g: 255, b: 0 }
+   * parseColor('rgb(3, 10, 100)');   // => { r: 3, g: 10, b: 100 }
+   * parseColor('rgb(50%, 0%, 50%)'); // => { r: 128, g: 0, b: 128 }
    */
   function parseColor(source) {
     var red, green, blue;
@@ -198,16 +199,36 @@
       return { r: red, g: green, b: blue };
     }
 
-    var rgbMatch = source.match(/^rgb\(\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\s*\)$/i);
+    var rgbMatch = source.match(/^rgb\(\s*(\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?)\s*\)$/i);
     if (rgbMatch) {
-      red = Number(rgbMatch[1]);
-      green = Number(rgbMatch[2]);
-      blue = Number(rgbMatch[3]);
+      red = parseComponentValue(rgbMatch[1]);
+      green = parseComponentValue(rgbMatch[2]);
+      blue = parseComponentValue(rgbMatch[3]);
 
       return { r: red, g: green, b: blue };
     }
 
     return null;
+  }
+
+  /**
+   * Parses a value between 0-255 from a string.
+   *
+   * @private
+   * @param {string} string
+   * @return {number}
+   *
+   * @example
+   * parseComponentValue('100');  // => 100
+   * parseComponentValue('100%'); // => 255
+   * parseComponentValue('50%');  // => 128
+   */
+  function parseComponentValue(string) {
+    if (string.charAt(string.length - 1) === '%') {
+      return Math.round(parseInt(string, 10) * 255 / 100);
+    }
+
+    return Number(string);
   }
 
   /**
