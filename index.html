@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>nearest-color demo</title>
+    <style type="text/css">
+        body > div {
+            width: 960px;
+            margin: auto;
+        }
+
+        p {
+            font-size: 150%;
+        }
+
+        #palette span {
+            display: inline-block;
+            height: 30px;
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        #sample {
+            height: 300px;
+        }
+
+        #actual,
+        #nearest {
+            position: relative;
+            display: inline-block;
+            width: 50%;
+            height: 100%;
+        }
+
+        #actual:before {
+            position: absolute;
+            display: block;
+            content: "Actual";
+            top: calc(50% - 10px);
+            left: 0;
+            right: 0;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        #nearest:before {
+            position: absolute;
+            display: block;
+            content: "Nearest";
+            top: calc(50% - 10px);
+            left: 0;
+            right: 0;
+            line-height: 20px;
+            text-align: center;
+        }
+    </style>
+    <script src="color.js"></script>
+    <script src="nearestColor.js"></script>
+</head>
+
+<body>
+    <div>
+        <p>
+            Choose a color using the picker. The color you selected will be
+            displayed on the left, and the nearest color from the list of
+            defaults will appear on the right.
+        </p>
+
+        <form>
+            <h3>Select a color</h3>
+            <input type="color" name="color" />
+        </form>
+
+        <div id="palette">
+            <h3>Default colors</h3>
+        </div>
+
+        <div id="sample">
+            <div id="actual"></div><div id="nearest"></div>
+        </div>
+    </div>
+
+    <script>
+        var color = document.querySelector('input[name="color"]'),
+            palette = document.getElementById('palette'),
+            actual = document.getElementById('actual'),
+            nearest = document.getElementById('nearest');
+
+        color.addEventListener('change', function() {
+            var value = color.value;
+
+            actual.style.backgroundColor = value;
+            nearest.style.backgroundColor = nearestColor(value);
+        });
+
+        nearestColor.DEFAULT_COLORS.forEach(function(defaultColor) {
+            var span = document.createElement('SPAN');
+            span.style.backgroundColor = defaultColor.source;
+            palette.appendChild(span);
+        });
+    </script>
+</body>
+
+</html>
