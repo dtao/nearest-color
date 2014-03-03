@@ -13,26 +13,30 @@
             font-size: 150%;
         }
 
-        #palette span {
+        h3 {
+            margin-bottom: 0;
+        }
+
+        .palette span {
             display: inline-block;
             height: 30px;
             width: 30px;
             margin-right: 10px;
         }
 
-        #sample {
+        .sample {
             height: 300px;
         }
 
-        #actual,
-        #nearest {
+        .actual,
+        .nearest {
             position: relative;
             display: inline-block;
             width: 50%;
             height: 100%;
         }
 
-        #actual:before {
+        .actual:before {
             position: absolute;
             display: block;
             content: "Actual";
@@ -43,7 +47,7 @@
             text-align: center;
         }
 
-        #nearest:before {
+        .nearest:before {
             position: absolute;
             display: block;
             content: "Nearest";
@@ -71,33 +75,56 @@
             <input type="color" name="color" />
         </form>
 
-        <div id="palette">
+        <div class="palette" id="default-palette">
             <h3>Default colors</h3>
         </div>
 
-        <div id="sample">
-            <div id="actual"></div><div id="nearest"></div>
+        <div class="sample" id="default-sample">
+            <div class="actual"></div><div class="nearest"></div>
+        </div>
+
+        <div class="palette" id="alternate-palette">
+            <h3>Alternate palette</h3>
+        </div>
+
+        <div class="sample" id="alternate-sample">
+            <div class="actual"></div><div class="nearest"></div>
         </div>
     </div>
 
     <script>
-        var color = document.querySelector('input[name="color"]'),
-            palette = document.getElementById('palette'),
-            actual = document.getElementById('actual'),
-            nearest = document.getElementById('nearest');
+        var colorPicker = document.querySelector('input[name="color"]');
 
-        color.addEventListener('change', function() {
-            var value = color.value;
+        function prepareSection(label, colors) {
+            var palette = document.getElementById(label + '-palette'),
+                sample = document.getElementById(label + '-sample'),
+                actual = sample.querySelector('.actual'),
+                nearest = sample.querySelector('.nearest'),
+                getColor = nearestColor.from(colors);
 
-            actual.style.backgroundColor = value;
-            nearest.style.backgroundColor = nearestColor(value);
-        });
+            colorPicker.addEventListener('change', function() {
+                var value = colorPicker.value;
 
-        nearestColor.DEFAULT_COLORS.forEach(function(defaultColor) {
-            var span = document.createElement('SPAN');
-            span.style.backgroundColor = defaultColor.source;
-            palette.appendChild(span);
-        });
+                actual.style.backgroundColor = value;
+                nearest.style.backgroundColor = getColor(value);
+            });
+
+            colors.forEach(function(color) {
+                var span = document.createElement('SPAN');
+                span.style.backgroundColor = color.source || color;
+                palette.appendChild(span);
+            });
+        }
+
+        prepareSection('default', nearestColor.DEFAULT_COLORS);
+        prepareSection('alternate', [
+            '#7EB5D6',
+            '#2A75A9',
+            '#274257',
+            '#DFC184',
+            '#8F6048',
+            '#644436'
+        ]);
     </script>
 </body>
 
