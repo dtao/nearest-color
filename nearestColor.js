@@ -164,39 +164,50 @@
    * @return {RGB}
    *
    * @example
-   * parseColor('#f00');    // => { r: 255, g: 0, b: 0 }
-   * parseColor('#04fbc8'); // => { r: 4, g: 251, b: 200 }
-   * parseColor('#FF0');    // => { r: 255, g: 255, b: 0 }
+   * parseColor('#f00');            // => { r: 255, g: 0, b: 0 }
+   * parseColor('#04fbc8');         // => { r: 4, g: 251, b: 200 }
+   * parseColor('#FF0');            // => { r: 255, g: 255, b: 0 }
+   * parseColor('rgb(3, 10, 100)'); // => { r: 3, g: 10, b: 100 }
    */
   function parseColor(source) {
-    var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/i);
-    if (!hexMatch) {
-      return null;
-    }
-
-    hexMatch = hexMatch[1];
-
-    if (hexMatch.length === 3) {
-      hexMatch = [
-        hexMatch.charAt(0) + hexMatch.charAt(0),
-        hexMatch.charAt(1) + hexMatch.charAt(1),
-        hexMatch.charAt(2) + hexMatch.charAt(2)
-      ];
-
-    } else {
-      hexMatch = [
-        hexMatch.substring(0, 2),
-        hexMatch.substring(2, 4),
-        hexMatch.substring(4, 6)
-      ];
-    }
-
     var red, green, blue;
-    red = parseInt(hexMatch[0], 16);
-    green = parseInt(hexMatch[1], 16);
-    blue = parseInt(hexMatch[2], 16);
 
-    return { r: red, g: green, b: blue };
+    var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/i);
+    if (hexMatch) {
+      hexMatch = hexMatch[1];
+
+      if (hexMatch.length === 3) {
+        hexMatch = [
+          hexMatch.charAt(0) + hexMatch.charAt(0),
+          hexMatch.charAt(1) + hexMatch.charAt(1),
+          hexMatch.charAt(2) + hexMatch.charAt(2)
+        ];
+
+      } else {
+        hexMatch = [
+          hexMatch.substring(0, 2),
+          hexMatch.substring(2, 4),
+          hexMatch.substring(4, 6)
+        ];
+      }
+
+      red = parseInt(hexMatch[0], 16);
+      green = parseInt(hexMatch[1], 16);
+      blue = parseInt(hexMatch[2], 16);
+
+      return { r: red, g: green, b: blue };
+    }
+
+    var rgbMatch = source.match(/^rgb\(\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\s*\)$/i);
+    if (rgbMatch) {
+      red = Number(rgbMatch[1]);
+      green = Number(rgbMatch[2]);
+      blue = Number(rgbMatch[3]);
+
+      return { r: red, g: green, b: blue };
+    }
+
+    return null;
   }
 
   /**
