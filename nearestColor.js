@@ -141,10 +141,14 @@
    */
   function mapColors(colors) {
     if (colors instanceof Array) {
-      return colors.map(function(hex) {
+      return colors.map(function(color) {
+        if (color.rgb) {
+          return color;
+        }
+
         return {
-          source: hex,
-          rgb: Color(hex).rgb()
+          source: color,
+          rgb: Color(color).rgb()
         };
       });
     }
