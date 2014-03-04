@@ -293,6 +293,8 @@
     '#808'  // v
   ]);
 
+  nearestColor.VERSION = '0.3.1';
+
   if (typeof module === 'object' && module && module.exports) {
     module.exports = nearestColor;
   } else {
