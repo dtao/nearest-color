@@ -47,6 +47,8 @@
    * nearestColor('#ffe'); // => '#ff0'
    * nearestColor('#efe'); // => '#ff0'
    * nearestColor('#abc'); // => '#808'
+   * nearestColor('red');  // => '#f00'
+   * nearestColor('blue'); // => '#00f'
    */
   function nearestColor(hex, colors) {
     var needle = parseColor(hex),
@@ -169,9 +171,14 @@
    * parseColor('#FF0');              // => { r: 255, g: 255, b: 0 }
    * parseColor('rgb(3, 10, 100)');   // => { r: 3, g: 10, b: 100 }
    * parseColor('rgb(50%, 0%, 50%)'); // => { r: 128, g: 0, b: 128 }
+   * parseColor('aqua');              // => { r: 0, g: 255, b: 255 }
    */
   function parseColor(source) {
     var red, green, blue;
+
+    if (source in nearestColor.STANDARD_COLORS) {
+      return parseColor(nearestColor.STANDARD_COLORS[source]);
+    }
 
     var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/i);
     if (hexMatch) {
@@ -230,6 +237,29 @@
 
     return Number(string);
   }
+
+  /**
+   * A map from the names of standard CSS colors to their hex values.
+   */
+  nearestColor.STANDARD_COLORS = {
+    aqua: '#0ff',
+    black: '#000',
+    blue: '#00f',
+    fuchsia: '#f0f',
+    gray: '#808080',
+    green: '#008000',
+    lime: '#0f0',
+    maroon: '#800000',
+    navy: '#000080',
+    olive: '#808000',
+    orange: '#ffa500',
+    purple: '#800080',
+    red: '#f00',
+    silver: '#c0c0c0',
+    teal: '#008080',
+    white: '#fff',
+    yellow: '#ff0'
+  };
 
   /**
    * Default colors. Comprises the colors of the rainbox (good ol' ROY G. BIV).
