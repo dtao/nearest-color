@@ -94,22 +94,29 @@
    *     behavior as {@link nearestColor}, but with the list of colors predefined.
    *
    * @example
-   * var getColor = nearestColor.from({
+   * var colors = {
    *   'maroon': '#800',
    *   'light yellow': '#ffe',
    *   'pale blue': '#def'
-   * });
+   * };
    *
-   * var getBGColor = getColor.from([
+   * var bgColors = [
    *   '#eee',
    *   '#444'
-   * ]);
+   * ];
+   *
+   * var getColor = nearestColor.from(colors);
+   * var getBGColor = getColor.from(bgColors);
+   * var getAnyColor = nearestColor.from(colors).or(bgColors);
    *
    * getColor('#f00');
    * // => { name: 'maroon', value: '#800' }
    *
    * getBGColor('#fff'); // => '#eee'
    * getBGColor('#000'); // => '#444'
+   *
+   * getAnyColor('#f00'); // => { name: 'maroon', value: '#800' }
+   * getAnyColor('#888'); // => '#444'
    */
   nearestColor.from = function from(availableColors) {
     var colors = mapColors(availableColors),
@@ -123,6 +130,12 @@
     // multiple times without needing to keep a reference to the original
     // nearestColor function.
     matcher.from = from;
+
+    // Also provide a way to combine multiple color lists.
+    matcher.or = function or(alternateColors) {
+      var extendedColors = colors.concat(mapColors(alternateColors));
+      return nearestColor.from(extendedColors);
+    };
 
     return matcher;
   };
