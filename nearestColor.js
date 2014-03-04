@@ -48,7 +48,7 @@
    * nearestColor('#efe'); // => '#ff0'
    * nearestColor('#abc'); // => '#808'
    * nearestColor('red');  // => '#f00'
-   * nearestColor('blue'); // => '#00f'
+   * nearestColor('foo');  // => null
    */
   function nearestColor(hex, colors) {
     var needle = parseColor(hex),
@@ -56,6 +56,10 @@
         minDistance = Infinity,
         rgb,
         value;
+
+    if (!needle) {
+      return null;
+    }
 
     colors || (colors = nearestColor.DEFAULT_COLORS);
 
