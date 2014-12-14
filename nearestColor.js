@@ -82,7 +82,7 @@
     }
 
     return value.name ?
-      { name: value.name, value: value.source } :
+      { name: value.name, value: value.source, rgb: value.rgb } :
       value.source;
   }
 
@@ -94,7 +94,8 @@
    * @param {Array.<string>|Object} availableColors An array of hex-based color
    *     strings, or an object mapping color *names* to hex values.
    * @return {function(string):ColorMatch|string} A function with the same
-   *     behavior as {@link nearestColor}, but with the list of colors predefined.
+   *     behavior as {@link nearestColor}, but with the list of colors 
+   *     predefined.
    *
    * @example
    * var colors = {
@@ -113,12 +114,12 @@
    * var getAnyColor = nearestColor.from(colors).or(bgColors);
    *
    * getColor('#f00');
-   * // => { name: 'maroon', value: '#800' }
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
    *
    * getBGColor('#fff'); // => '#eee'
    * getBGColor('#000'); // => '#444'
    *
-   * getAnyColor('#f00'); // => { name: 'maroon', value: '#800' }
+   * getAnyColor('#f00'); // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
    * getAnyColor('#888'); // => '#444'
    */
   nearestColor.from = function from(availableColors) {
