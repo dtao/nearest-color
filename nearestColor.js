@@ -34,7 +34,8 @@
    * color matcher by calling {@link nearestColor.from}.
    *
    * @public
-   * @param {string} hex The hex-based color string, e.g., '#FF0'
+   * @param {RGB|string} needle Either an {@link RGB} color or a hex-based
+   *     string representing one, e.g., '#FF0'
    * @param {Array.<ColorSpec>=} colors An optional list of available colors
    *     (defaults to {@link nearestColor.DEFAULT_COLORS})
    * @return {ColorMatch|string} If the colors in the provided list had names,
@@ -42,24 +43,26 @@
    *     nearest color from the list. Otherwise, simply the hex value.
    *
    * @example
-   * nearestColor('#f11'); // => '#f00'
-   * nearestColor('#f88'); // => '#f80'
-   * nearestColor('#ffe'); // => '#ff0'
-   * nearestColor('#efe'); // => '#ff0'
-   * nearestColor('#abc'); // => '#808'
-   * nearestColor('red');  // => '#f00'
-   * nearestColor('foo');  // => null
+   * nearestColor({ r: 200, g: 50, b: 50 }); // => '#f00'
+   * nearestColor('#f11');                   // => '#f00'
+   * nearestColor('#f88');                   // => '#f80'
+   * nearestColor('#ffe');                   // => '#ff0'
+   * nearestColor('#efe');                   // => '#ff0'
+   * nearestColor('#abc');                   // => '#808'
+   * nearestColor('red');                    // => '#f00'
+   * nearestColor('foo');                    // => null
    */
-  function nearestColor(hex, colors) {
-    var needle = parseColor(hex),
-        distance,
-        minDistance = Infinity,
-        rgb,
-        value;
+  function nearestColor(needle, colors) {
+    needle = parseColor(needle);
 
     if (!needle) {
       return null;
     }
+
+    var distance,
+        minDistance = Infinity,
+        rgb,
+        value;
 
     colors || (colors = nearestColor.DEFAULT_COLORS);
 
@@ -179,19 +182,24 @@
    * Parses a color from a string.
    *
    * @private
-   * @param {string} source
+   * @param {RGB|string} source
    * @return {RGB}
    *
    * @example
-   * parseColor('#f00');              // => { r: 255, g: 0, b: 0 }
-   * parseColor('#04fbc8');           // => { r: 4, g: 251, b: 200 }
-   * parseColor('#FF0');              // => { r: 255, g: 255, b: 0 }
-   * parseColor('rgb(3, 10, 100)');   // => { r: 3, g: 10, b: 100 }
-   * parseColor('rgb(50%, 0%, 50%)'); // => { r: 128, g: 0, b: 128 }
-   * parseColor('aqua');              // => { r: 0, g: 255, b: 255 }
+   * parseColor({ r: 3, g: 22, b: 111 }); // => { r: 3, g: 22, b: 111 }
+   * parseColor('#f00');                  // => { r: 255, g: 0, b: 0 }
+   * parseColor('#04fbc8');               // => { r: 4, g: 251, b: 200 }
+   * parseColor('#FF0');                  // => { r: 255, g: 255, b: 0 }
+   * parseColor('rgb(3, 10, 100)');       // => { r: 3, g: 10, b: 100 }
+   * parseColor('rgb(50%, 0%, 50%)');     // => { r: 128, g: 0, b: 128 }
+   * parseColor('aqua');                  // => { r: 0, g: 255, b: 255 }
    */
   function parseColor(source) {
     var red, green, blue;
+
+    if (typeof source === 'object') {
+      return source;
+    }
 
     if (source in nearestColor.STANDARD_COLORS) {
       return parseColor(nearestColor.STANDARD_COLORS[source]);
