@@ -15,6 +15,7 @@
    * @typedef {Object} ColorMatch
    * @property {string} name The name of the matched color, e.g., 'red'
    * @property {string} value The hex-based color string, e.g., '#FF0'
+   * @property {RGB} rgb The {@link RGB} color values.
    */
 
   /**
@@ -100,7 +101,7 @@
    * @example
    * var colors = {
    *   'maroon': '#800',
-   *   'light yellow': '#ffe',
+   *   'light yellow': { r: 255, g: 255, b: 51 },
    *   'pale blue': '#def'
    * };
    *
@@ -116,10 +117,15 @@
    * getColor('#f00');
    * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
    *
+   * getColor('#ff0');
+   * // => { name: 'light yellow', value: '#ffff33', rgb: { r: 255, g: 255, b: 51 } }
+   *
    * getBGColor('#fff'); // => '#eee'
    * getBGColor('#000'); // => '#444'
    *
-   * getAnyColor('#f00'); // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
+   * getAnyColor('#f00');
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
+   *
    * getAnyColor('#888'); // => '#444'
    */
   nearestColor.from = function from(availableColors) {
@@ -157,26 +163,13 @@
   function mapColors(colors) {
     if (colors instanceof Array) {
       return colors.map(function(color) {
-        if (color.rgb) {
-          return color;
-        }
-
-        return {
-          source: color,
-          rgb: parseColor(color)
-        };
+        return createColorSpec(color);
       });
     }
 
-    var result = [];
-    for (var name in colors) {
-      result.push({
-        name: name,
-        source: colors[name],
-        rgb: parseColor(colors[name])
-      });
-    }
-    return result;
+    return Object.keys(colors).map(function(name) {
+      return createColorSpec(colors[name], name);
+    });
   };
 
   /**
@@ -245,6 +238,50 @@
   }
 
   /**
+   * Creates a {@link ColorSpec} from either a string or an {@link RGB}.
+   *
+   * @private
+   * @param {string|RGB} input
+   * @param {string=} name
+   * @return {ColorSpec}
+   *
+   * @example
+   * createColorSpec('#800'); // => {
+   *   source: '#800',
+   *   rgb: { r: 136, g: 0, b: 0 }
+   * }
+   *
+   * createColorSpec('#800', 'maroon'); // => {
+   *   name: 'maroon',
+   *   source: '#800',
+   *   rgb: { r: 136, g: 0, b: 0 }
+   * }
+   */
+  function createColorSpec(input, name) {
+    var color = {};
+
+    if (name) {
+      color.name = name;
+    }
+
+    if (typeof input === 'string') {
+      color.source = input;
+      color.rgb = parseColor(input);
+
+    } else if (typeof input === 'object') {
+      // This is for if/when we're concatenating lists of colors.
+      if (input.source) {
+        return createColorSpec(input.source, input.name);
+      }
+
+      color.rgb = input;
+      color.source = rgbToHex(input);
+    }
+
+    return color;
+  }
+
+  /**
    * Parses a value between 0-255 from a string.
    *
    * @private
@@ -262,6 +299,40 @@
     }
 
     return Number(string);
+  }
+
+  /**
+   * Converts an {@link RGB} color to its hex representation.
+   *
+   * @private
+   * @param {RGB} rgb
+   * @return {string}
+   *
+   * @example
+   * rgbToHex({ r: 255, g: 128, b: 0 }); // => '#ff8000'
+   */
+  function rgbToHex(rgb) {
+    return '#' + leadingZero(rgb.r.toString(16)) +
+      leadingZero(rgb.g.toString(16)) + leadingZero(rgb.b.toString(16));
+  }
+
+  /**
+   * Puts a 0 in front of a numeric string if it's only one digit. Otherwise
+   * nothing (just returns the value passed in).
+   *
+   * @private
+   * @param {string} value
+   * @return
+   *
+   * @example
+   * leadingZero('1');  // => '01'
+   * leadingZero('12'); // => '12'
+   */
+  function leadingZero(value) {
+    if (value.length === 1) {
+      value = '0' + value;
+    }
+    return value;
   }
 
   /**
