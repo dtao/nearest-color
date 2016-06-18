@@ -359,7 +359,7 @@
   };
 
   /**
-   * Default colors. Comprises the colors of the rainbox (good ol' ROY G. BIV).
+   * Default colors. Comprises the colors of the rainbow (good ol' ROY G. BIV).
    * This list will be used for calls to {@nearestColor} that don't specify a list
    * of available colors to match.
    */
