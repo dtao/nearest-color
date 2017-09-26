@@ -115,16 +115,16 @@
    * var getAnyColor = nearestColor.from(colors).or(bgColors);
    *
    * getColor('#f00');
-   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 350.46397817750113}
    *
    * getColor('#ff0');
-   * // => { name: 'light yellow', value: '#ffff33', rgb: { r: 255, g: 255, b: 51 } }
+   * // => { name: 'light yellow', value: '#ffff33', rgb: { r: 255, g: 255, b: 51 }, distance: 257.8177650977527}
    *
    * getBGColor('#fff'); // => '#eee'
    * getBGColor('#000'); // => '#444'
    *
    * getAnyColor('#f00');
-   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 } }
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 210.27838690650069}
    *
    * getAnyColor('#888'); // => '#444'
    */
