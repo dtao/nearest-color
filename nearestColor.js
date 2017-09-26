@@ -83,7 +83,7 @@
     }
 
     return value.name ?
-      { name: value.name, value: value.source, rgb: value.rgb } :
+      { name: value.name, value: value.source, rgb: value.rgb, distance: distance } :
       value.source;
   }
 
