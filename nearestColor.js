@@ -39,6 +39,8 @@
    *     string representing one, e.g., '#FF0'
    * @param {Array.<ColorSpec>=} colors An optional list of available colors
    *     (defaults to {@link nearestColor.DEFAULT_COLORS})
+   * @param {Array} exclude An optional list of colors as stringified RGB objects,
+   *     those will be excluded from the returned colors
    * @return {ColorMatch|string} If the colors in the provided list had names,
    *     then a {@link ColorMatch} object with the name and (hex) value of the
    *     nearest color from the list. Otherwise, simply the hex value.
@@ -53,7 +55,7 @@
    * nearestColor('red');                    // => '#f00'
    * nearestColor('foo');                    // => null
    */
-  function nearestColor(needle, colors) {
+  function nearestColor(needle, colors, exclude) {
     needle = parseColor(needle);
 
     if (!needle) {
@@ -69,17 +71,22 @@
 
     for (var i = 0; i < colors.length; ++i) {
       rgb = colors[i].rgb;
+      if(!(exclude && exclude.indexOf(JSON.stringify(rgb)) > -1)) {
+        distance = Math.sqrt(
+          Math.pow(needle.r - rgb.r, 2) +
+          Math.pow(needle.g - rgb.g, 2) +
+          Math.pow(needle.b - rgb.b, 2)
+        );
 
-      distance = Math.sqrt(
-        Math.pow(needle.r - rgb.r, 2) +
-        Math.pow(needle.g - rgb.g, 2) +
-        Math.pow(needle.b - rgb.b, 2)
-      );
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        value = colors[i];
+        if ((distance < minDistance)) {
+          minDistance = distance;
+          value = colors[i];
+        }
       }
+    }
+
+    if (exclude) {
+      exclude.push(JSON.stringify(value.rgb));
     }
 
     return value.name ?
@@ -94,6 +101,7 @@
    * @public
    * @param {Array.<string>|Object} availableColors An array of hex-based color
    *     strings, or an object mapping color *names* to hex values.
+   * @param {Boolean} isExclusive if turned on, every color can be returned only once.
    * @return {function(string):ColorMatch|string} A function with the same
    *     behavior as {@link nearestColor}, but with the list of colors 
    *     predefined.
@@ -128,12 +136,13 @@
    *
    * getAnyColor('#888'); // => '#444'
    */
-  nearestColor.from = function from(availableColors) {
+  nearestColor.from = function from(availableColors, isExclusive) {
     var colors = mapColors(availableColors),
         nearestColorBase = nearestColor;
+        colorsToExclude = [];
 
     var matcher = function nearestColor(hex) {
-      return nearestColorBase(hex, colors);
+      return nearestColorBase(hex, colors, isExclusive && colorsToExclude);
     };
 
     // Keep the 'from' method, to support changing the list of available colors
