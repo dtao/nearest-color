@@ -17,6 +17,26 @@ nearestColor('#800'); // => { name: 'red', value: '#f00', rgb: { r: 255, g: 0, b
 nearestColor('#ffe'); // => { name: 'yellow', value: '#ff0', rgb: { r: 255, g: 255, b: 0 } }
 ```
 
+### Exclusive mode
+
+If a color should be returned only once:
+```javascript
+var colors = {
+  black: '#000',
+  blue: '#00f',
+  green: '#008000',
+  maroon: '#800000',
+  orange: '#ffa500',
+  red: '#f00',
+  white: '#fff',
+  yellow: '#ff0'
+};
+
+var nearestColorFn = require('nearest-color');
+var nearestColor = nearestColorFn.from(colors, true);
+nearestColor('#f00') // => red
+nearestColor('#f00') // => maroon
+```
 ## How it works
 
 Finding the nearest color is a specific case of the "nearest neighbor search" (or NNS) problem. The predefined colors can be thought of as points in 3D space where the X, Y, and Z axes represent each color's red, green, and blue (RGB) values. So finding the nearest color to any given value amounts to finding the closet neighbor to the point where that color would reside when plotted in such a 3D space.
