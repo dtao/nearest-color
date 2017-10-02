@@ -4,41 +4,84 @@
 <head>
     <title>nearest-color demo</title>
     <style type="text/css">
-        body > div {
-            width: 960px;
-            margin: auto;
+        @import url('https://rsms.me/inter/inter-ui.css');
+
+        html, body {
+            font-family: 'Inter UI', sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
         }
 
-        h1 {
-            font-family: sans-serif;
-            border-bottom: 1px solid black;
+        .layout {
+            max-width: 50rem;
+            margin: 0 auto 4rem; 
         }
 
-        p {
-            font-size: 150%;
+        .title {
+            font-weight: 400;
+            font-size: 4rem;
         }
 
-        h3 {
-            margin-bottom: 0;
+        .title__logo,
+        .title__text {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .title__logo {
+            margin-bottom: 1rem;
+        }
+
+        .title--sub {
+            font-size: 2rem;
+        }
+
+        .logo {
+            max-width: 5rem;
+            height: auto;
+        }
+
+        .logo--large {
+            max-width: 10rem;
+        }
+
+        .intro {
+            font-size: 1.4rem;
+        }
+        .picker {
+            margin-left: 1rem;
+        }
+
+        .palette {
+            display: flex;
+            height: 2rem;
+            align-items: stretch;
         }
 
         .palette span {
-            display: inline-block;
-            height: 30px;
-            width: 30px;
-            margin-right: 10px;
+            flex-grow: 1;
         }
 
         .sample {
-            height: 300px;
+            display: flex;
+            align-items: stretch;
         }
 
         .actual,
         .nearest {
             position: relative;
-            display: inline-block;
-            width: 50%;
-            height: 100%;
+            flex-grow: 1;
+            border: 0.3rem solid #000;
+            padding-top: 30%;
+        }
+
+        .actual {
+            margin-right: -0.15rem;
+        }
+
+        .nearest {
+            margin-left: -0.15rem;
         }
 
         .actual:before {
@@ -67,36 +110,45 @@
 </head>
 
 <body>
-    <div>
-        <h1>nearest-color</h1>
+    <div class="layout">
+        <h1 class="title">
+            <svg class="title__logo logo logo--large" xmlns="http://www.w3.org/2000/svg" width="337.25" height="331.53" viewBox="0 0 337.25 331.53"><defs><style>.cls-1{fill:#160017}.cls-2{fill:url(#linear-gradient)}</style><linearGradient id="linear-gradient" x1="63.76" y1="57.76" x2="201.2" y2="360.27" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f0f"/><stop offset="1" stop-color="#0ff"/></linearGradient></defs><title>nearest-color logo</title><g id="Layer_3" data-name="Layer 3"><circle class="cls-1" cx="168.62" cy="189.53" r="142"/><path class="cls-2" d="M6.06 288.57L168.62 7l162.57 281.57H6.06z"/><path d="M199.25 49.13l156.5 271.07h-313l156.5-271.07m0-14l-6.06 10.5-156.5 271.06-6.06 10.5h337.24l-6.06-10.5-156.5-271.06-6.06-10.5z" transform="translate(-30.63 -35.13)"/></g><g id="Layer_4" data-name="Layer 4"><path d="M291.79 273.41a10.79 10.79 0 1 1-10.79 10.8 10.79 10.79 0 0 1 10.79-10.79m0-5a15.79 15.79 0 1 0 15.79 15.79 15.81 15.81 0 0 0-15.79-15.79zM242.48 282.42a5.27 5.27 0 0 0 .13-1.05 2.43 2.43 0 0 0-.69-1.84 2.62 2.62 0 0 0-1.88-.66 3.46 3.46 0 0 0-2.54 1.05 5.42 5.42 0 0 0-1.42 2.83l-1.94 9.16H230l3.46-16.34h4l-.56 2.63h.59a5.15 5.15 0 0 1 2.09-2.37 5.83 5.83 0 0 1 2.88-.72 4.44 4.44 0 0 1 3.31 1.25 4.81 4.81 0 0 1 1.24 3.52 6.78 6.78 0 0 1-.07 1q-.07.45-.17 1l-1.32 6.12.33.23 1.42-1 2.08 3.1-1.78 1.19a4.64 4.64 0 0 1-2.67.86 3.9 3.9 0 0 1-1.38-.25 3.58 3.58 0 0 1-1.15-.69 3.3 3.3 0 0 1-.79-1.09 3.47 3.47 0 0 1-.3-1.47 5.73 5.73 0 0 1 .1-1zM267.75 285.91a9.12 9.12 0 0 1-3.28 4.69 10.29 10.29 0 0 1-6.31 1.76 8 8 0 0 1-2.73-.46 6.2 6.2 0 0 1-2.24-1.38 6.45 6.45 0 0 1-1.5-2.29 8.57 8.57 0 0 1-.54-3.18 10.48 10.48 0 0 1 .71-3.85 9.11 9.11 0 0 1 2.06-3.16 9.92 9.92 0 0 1 3.26-2.14 11.28 11.28 0 0 1 4.35-.79 8.6 8.6 0 0 1 3.13.53 6.3 6.3 0 0 1 2.24 1.43 6.07 6.07 0 0 1 1.35 2.13 7.19 7.19 0 0 1 .46 2.57l-4.22.82a3.73 3.73 0 0 0-.84-2.6 3.52 3.52 0 0 0-2.72-.92 5.36 5.36 0 0 0-2.19.44 5.45 5.45 0 0 0-1.75 1.22 5.53 5.53 0 0 0-1.15 1.81 6 6 0 0 0-.41 2.22 3.54 3.54 0 0 0 1 2.77 3.6 3.6 0 0 0 2.5.89 5 5 0 0 0 3.23-.92 5.63 5.63 0 0 0 1.75-2.6z" transform="translate(-30.63 -35.13)"/></g></svg>
+            <span class="title__text">nearest-color</span>
+        </h1>
 
-        <p>
+        <p class="intro">
             Choose a color using the picker. The color you selected will be
             displayed on the left, and the nearest color from the list of
             defaults will appear on the right.
         </p>
 
         <form>
-            <h3>Select a color</h3>
-            <input type="color" name="color" />
+            <label class="title title--sub">
+                Select a color ->
+                <input class="picker" type="color" name="color" />
+            </label>
         </form>
 
+        <h2 class="title title--sub">Default colors</h2>
         <div class="palette" id="default-palette">
-            <h3>Default colors</h3>
         </div>
 
         <div class="sample" id="default-sample">
             <div class="actual"></div><div class="nearest"></div>
         </div>
 
+        <h2 class="title title--sub">Alternate palette</h2>
         <div class="palette" id="alternate-palette">
-            <h3>Alternate palette</h3>
         </div>
 
         <div class="sample" id="alternate-sample">
             <div class="actual"></div><div class="nearest"></div>
         </div>
 
+        <h2 class="title title--sub">Massive palette (<a href="https://github.com/meodai/color-names">~16k entries</a>)</h2>
+        <div class="sample" id="huge-sample">
+            <div class="actual"></div><div class="nearest"></div>
+        </div>
         <!-- "Fork me on GitHub" ribbon -->
         <a href="https://github.com/dtao/nearest-color"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github-camo.global.ssl.fastly.net/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
     </div>
@@ -104,7 +156,7 @@
     <script>
         var colorPicker = document.querySelector('input[name="color"]');
 
-        function prepareSection(label, colors) {
+        function prepareSection(label, colors, hideColorPreviews) {
             var palette = document.getElementById(label + '-palette'),
                 sample = document.getElementById(label + '-sample'),
                 actual = sample.querySelector('.actual'),
@@ -117,6 +169,10 @@
                 actual.style.backgroundColor = value;
                 nearest.style.backgroundColor = getColor(value);
             });
+
+            if (hideColorPreviews) {
+                return;
+            }
 
             colors.forEach(function(color) {
                 var span = document.createElement('SPAN');
@@ -135,6 +191,24 @@
             '#8F6048',
             '#644436'
         ]);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://unpkg.com/color-name-list/dist/colornames.json');
+        xhr.onload = e => {
+            if (xhr.status === 200) {
+            prepareSection(
+                'huge',
+                JSON.parse(xhr.responseText).map(function(col){
+                    return col.hex;
+                }), 
+                true
+            );
+            
+            } else {
+                console.log(xhr.status);
+            }
+        };
+        xhr.send();
     </script>
 </body>
 
