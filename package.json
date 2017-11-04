@@ -1,6 +1,6 @@
 {
   "name": "nearest-color",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Find the nearest color",
   "main": "nearestColor.js",
   "scripts": {
