@@ -82,9 +82,16 @@
       }
     }
 
-    return value.name ?
-      { name: value.name, value: value.source, rgb: value.rgb, distance: distance } :
-      value.source;
+    if (value.name) {
+      return {
+        name: value.name,
+        value: value.source,
+        rgb: value.rgb,
+        distance: minDistance
+      };
+    }
+
+    return value.source;
   }
 
   /**
@@ -115,16 +122,16 @@
    * var getAnyColor = nearestColor.from(colors).or(bgColors);
    *
    * getColor('#f00');
-   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 350.46397817750113}
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 119}
    *
    * getColor('#ff0');
-   * // => { name: 'light yellow', value: '#ffff33', rgb: { r: 255, g: 255, b: 51 }, distance: 257.8177650977527}
+   * // => { name: 'light yellow', value: '#ffff33', rgb: { r: 255, g: 255, b: 51 }, distance: 51}
    *
    * getBGColor('#fff'); // => '#eee'
    * getBGColor('#000'); // => '#444'
    *
    * getAnyColor('#f00');
-   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 210.27838690650069}
+   * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 119}
    *
    * getAnyColor('#888'); // => '#444'
    */
