@@ -109,7 +109,8 @@
    * var colors = {
    *   'maroon': '#800',
    *   'light yellow': { r: 255, g: 255, b: 51 },
-   *   'pale blue': '#def'
+   *   'pale blue': '#def',
+   *   'white': 'fff'
    * };
    *
    * var bgColors = [
@@ -124,6 +125,9 @@
    * var getColor = nearestColor.from(colors);
    * var getBGColor = getColor.from(bgColors);
    * var getAnyColor = nearestColor.from(colors).or(bgColors);
+   *
+   * getColor('ffe');
+   * // => { name: 'white', value: 'fff', rgb: { r: 255, g: 255, b: 255 }, distance: 17}
    *
    * getColor('#f00');
    * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 119}
@@ -200,6 +204,7 @@
    * parseColor('rgb(3, 10, 100)');       // => { r: 3, g: 10, b: 100 }
    * parseColor('rgb(50%, 0%, 50%)');     // => { r: 128, g: 0, b: 128 }
    * parseColor('aqua');                  // => { r: 0, g: 255, b: 255 }
+   * parseColor('fff');                   // => { r: 255, g: 255, b: 255 }
    * parseColor('foo');                   // => throws
    */
   function parseColor(source) {
@@ -213,7 +218,7 @@
       return parseColor(nearestColor.STANDARD_COLORS[source]);
     }
 
-    var hexMatch = source.match(/^#((?:[0-9a-f]{3}){1,2})$/i);
+    var hexMatch = source.match(/^#?((?:[0-9a-f]{3}){1,2})$/i);
     if (hexMatch) {
       hexMatch = hexMatch[1];
 
