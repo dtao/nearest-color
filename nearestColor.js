@@ -60,8 +60,8 @@
       return null;
     }
 
-    var distance,
-        minDistance = Infinity,
+    var distanceSq,
+        minDistanceSq = Infinity,
         rgb,
         value;
 
@@ -70,14 +70,14 @@
     for (var i = 0; i < colors.length; ++i) {
       rgb = colors[i].rgb;
 
-      distance = Math.sqrt(
+      distanceSq = (
         Math.pow(needle.r - rgb.r, 2) +
         Math.pow(needle.g - rgb.g, 2) +
         Math.pow(needle.b - rgb.b, 2)
       );
 
-      if (distance < minDistance) {
-        minDistance = distance;
+      if (distanceSq < minDistanceSq) {
+        minDistanceSq = distanceSq;
         value = colors[i];
       }
     }
@@ -87,7 +87,7 @@
         name: value.name,
         value: value.source,
         rgb: value.rgb,
-        distance: minDistance
+        distance: Math.sqrt(minDistanceSq)
       };
     }
 
@@ -102,7 +102,7 @@
    * @param {Array.<string>|Object} availableColors An array of hex-based color
    *     strings, or an object mapping color *names* to hex values.
    * @return {function(string):ColorMatch|string} A function with the same
-   *     behavior as {@link nearestColor}, but with the list of colors 
+   *     behavior as {@link nearestColor}, but with the list of colors
    *     predefined.
    *
    * @example
