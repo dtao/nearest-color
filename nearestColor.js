@@ -51,7 +51,7 @@
    * nearestColor('#efe');                   // => '#ff0'
    * nearestColor('#abc');                   // => '#808'
    * nearestColor('red');                    // => '#f00'
-   * nearestColor('foo');                    // => null
+   * nearestColor('foo');                    // => throws
    */
   function nearestColor(needle, colors) {
     needle = parseColor(needle);
@@ -117,6 +117,10 @@
    *   '#444'
    * ];
    *
+   * var invalidColors = {
+   *   'invalid': 'foo'
+   * };
+   *
    * var getColor = nearestColor.from(colors);
    * var getBGColor = getColor.from(bgColors);
    * var getAnyColor = nearestColor.from(colors).or(bgColors);
@@ -134,6 +138,8 @@
    * // => { name: 'maroon', value: '#800', rgb: { r: 136, g: 0, b: 0 }, distance: 119}
    *
    * getAnyColor('#888'); // => '#444'
+   *
+   * nearestColor.from(invalidColors); // => throws
    */
   nearestColor.from = function from(availableColors) {
     var colors = mapColors(availableColors),
@@ -194,6 +200,7 @@
    * parseColor('rgb(3, 10, 100)');       // => { r: 3, g: 10, b: 100 }
    * parseColor('rgb(50%, 0%, 50%)');     // => { r: 128, g: 0, b: 128 }
    * parseColor('aqua');                  // => { r: 0, g: 255, b: 255 }
+   * parseColor('foo');                   // => throws
    */
   function parseColor(source) {
     var red, green, blue;
@@ -241,7 +248,7 @@
       return { r: red, g: green, b: blue };
     }
 
-    return null;
+    throw Error('"' + source + '" is not a valid color');
   }
 
   /**
