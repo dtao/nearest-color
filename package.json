@@ -1,6 +1,6 @@
 {
   "name": "nearest-color",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Find the nearest color",
   "main": "nearestColor.js",
   "scripts": {
@@ -13,8 +13,7 @@
   "author": "Dan Tao <daniel.tao@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/dtao/nearest-color",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "autodoc": ">= 0.6.1"
   }
