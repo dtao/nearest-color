@@ -69,13 +69,40 @@
 
     for (var i = 0; i < colors.length; ++i) {
       rgb = colors[i].rgb;
-
+const double gamma = 2.25;
       distanceSq = (
-        Math.abs(needle.r - rgb.r) +
-        Math.abs(needle.g - rgb.g)*2 +
-        Math.abs(needle.b - rgb.b)
+        Math.abs(Math.pow(needle.r, gamma) - Math.pow(rgb.r, gamma))*212671 +
+        Math.abs(Math.pow(needle.g, gamma) - Math.pow(rgb.g, gamma))*715160 +
+        Math.abs(Math.pow(needle.b, gamma) - Math.pow(rgb.b, gamma))*72169
       );
-
+// compensate for visual quirks in dark colors
+double linearbrightness[2];
+linearbrightness[0] = (Math.pow(needle.r, gamma)*212671 +
+Math.pow(needle.g, gamma)*715160 +
+Math.pow(needle.b, gamma)*72169)/1000000
+;
+linearbrightness[1] = (Math.pow(rgb.r, gamma)*212671 +
+Math.pow(rgb.g, gamma)*715160 +
+Math.pow(rgb.b, gamma)*72169)/1000000
+;
+double gammabrightness[2];
+gammabrightness[0] = Math.pow(linearbrightness[0], 1.0/gamma);
+gammabrightness[1] = Math.pow(linearbrightness[1], 1.0/gamma);
+double factor;
+if (linearbrightness[0]==linearbrightness[1]){
+    //derivative: derivative of linear is 1;
+    //            derivative of x^const = const*(x^(const-1));
+    //            divide the two;
+    factor = ((Math.pow(linearbrightness[0], (1.0/gamma)-1.0))*(1.0/gamma))/1;
+}
+else{
+    factor = (gammabrightness[1]-gammabrightness[0])/(linearbrightness[1]-linearbrightness[0]);
+}
+if(factor > 12.92 || factor == 0.0/0.0){
+    factor = 12.92; // sRGB cap, guard zero brightness, ...
+}
+distanceSq *= factor;
+distanceSq /= 1000000;
       if (distanceSq < minDistanceSq) {
         minDistanceSq = distanceSq;
         value = colors[i];
@@ -87,7 +114,7 @@
         name: value.name,
         value: value.source,
         rgb: value.rgb,
-        distance: Math.sqrt(minDistanceSq)
+        distance: minDistanceSq
       };
     }
 
