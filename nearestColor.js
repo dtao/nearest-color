@@ -71,9 +71,9 @@
       rgb = colors[i].rgb;
 
       distanceSq = (
-        Math.pow(needle.r - rgb.r, 2) +
-        Math.pow(needle.g - rgb.g, 2) +
-        Math.pow(needle.b - rgb.b, 2)
+        Math.abs(needle.r - rgb.r) +
+        Math.abs(needle.g - rgb.g)*2 +
+        Math.abs(needle.b - rgb.b)
       );
 
       if (distanceSq < minDistanceSq) {
