@@ -69,13 +69,40 @@
 
     for (var i = 0; i < colors.length; ++i) {
       rgb = colors[i].rgb;
-
+const double gamma = 2.25;
       distanceSq = (
-        Math.pow(needle.r - rgb.r, 2) +
-        Math.pow(needle.g - rgb.g, 2) +
-        Math.pow(needle.b - rgb.b, 2)
+        Math.abs(Math.pow(needle.r/255.0, gamma) - Math.pow(rgb.r/255.0, gamma))*212671.0 +
+        Math.abs(Math.pow(needle.g/255.0, gamma) - Math.pow(rgb.g/255.0, gamma))*715160.0 +
+        Math.abs(Math.pow(needle.b/255.0, gamma) - Math.pow(rgb.b/255.0, gamma))*72169.0
       );
-
+// compensate for visual quirks in dark colors
+double linearbrightness[2];
+linearbrightness[0] = (Math.pow(needle.r/255.0, gamma)*212671.0 +
+Math.pow(needle.g/255.0, gamma)*715160.0 +
+Math.pow(needle.b/255.0, gamma)*72169.0)/1000000.0
+;
+linearbrightness[1] = (Math.pow(rgb.r/255.0, gamma)*212671.0 +
+Math.pow(rgb.g/255.0, gamma)*715160.0 +
+Math.pow(rgb.b/255.0, gamma)*72169.0)/1000000.0
+;
+double gammabrightness[2];
+gammabrightness[0] = Math.pow(linearbrightness[0], 1.0/gamma);
+gammabrightness[1] = Math.pow(linearbrightness[1], 1.0/gamma);
+double factor;
+if (linearbrightness[0]==linearbrightness[1]){
+    //derivative: derivative of linear is 1,0;
+    //            derivative of x^const = const*(x^(const-1.0));
+    //            divide the two;
+    factor = ((Math.pow(linearbrightness[0], (1.0/gamma)-1.0))*(1.0/gamma))/1.0;
+}
+else{
+    factor = (gammabrightness[1]-gammabrightness[0])/(linearbrightness[1]-linearbrightness[0]);
+}
+if(factor > 12.92 || factor == 0.0/0.0){
+    factor = 12.92; // sRGB cap, guard zero brightness, ...
+}
+distanceSq *= factor;
+distanceSq /= 1000000.0;
       if (distanceSq < minDistanceSq) {
         minDistanceSq = distanceSq;
         value = colors[i];
@@ -87,7 +114,7 @@
         name: value.name,
         value: value.source,
         rgb: value.rgb,
-        distance: Math.sqrt(minDistanceSq)
+        distance: minDistanceSq
       };
     }
 
@@ -383,13 +410,14 @@
    * of available colors to match.
    */
   nearestColor.DEFAULT_COLORS = mapColors([
-    '#f00', // r
-    '#f80', // o
-    '#ff0', // y
-    '#0f0', // g
+    '#000', // k
     '#00f', // b
-    '#008', // i
-    '#808'  // v
+    '#0f0', // g
+    '#0ff', // c
+    '#f00', // r
+    '#f0f', // m
+    '#ff0'  // y
+    '#fff'  // w
   ]);
 
   nearestColor.VERSION = '0.4.4';
